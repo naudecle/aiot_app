@@ -34,8 +34,8 @@ Une application mobile hybride intelligente développée avec **React Native** e
 1. Cloner le dépôt :
 
 ```bash
-git clone https://github.com/naudecle/IOT_Project.git
-cd IOT_Project
+git clone https://github.com/naudecle/aiot_app.git
+cd aiot_app
 ```
 
 2. Installer les dépendances :
