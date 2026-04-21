@@ -53,7 +53,13 @@ npx expo start
 
 ## 📱 Captures d'écran
 
-*(Ajoutez ici vos captures d'écran du dossier `brain` si vous le souhaitez)*
+<img width="929" height="965" alt="dashboard_alert" src="https://github.com/user-attachments/assets/0ee337e0-b636-4b1b-992a-56734a226cf2" />
+<img width="929" height="965" alt="dashboard_normal" src="https://github.com/user-attachments/assets/0d6d8ad3-2b14-443b-8e5e-8cf298dbad68" />
+<img width="929" height="965" alt="historique" src="https://github.com/user-attachments/assets/4bae590f-89e6-4a8f-90d4-faf59b1b3608" />
+<img width="929" height="965" alt="parametres" src="https://github.com/user-attachments/assets/d8e9de4d-34a1-459b-9b69-b3fc037cc9dd" />
+
+
+
 
 ## 💡 Notes sur le développement
 
