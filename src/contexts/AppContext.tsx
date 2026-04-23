@@ -52,6 +52,8 @@ interface AppContextData {
   isSimulationRunning: boolean;
   toggleSimulation: () => void;
   dataPointCount: number;
+  weatherData: WeatherData | null;
+  weatherLoading: boolean;
 }
 
 export const AppContext = createContext<AppContextData>({} as AppContextData);
@@ -83,6 +85,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
   const [isSimulationRunning, setIsSimulationRunning] = useState(true);
   const [dataPointCount, setDataPointCount] = useState(0);
   const [realWeather, setRealWeather] = useState<WeatherData | null>(null);
+  const [weatherLoading, setWeatherLoading] = useState(true);
 
   useEffect(() => {
     initDB()
@@ -113,8 +116,10 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
     if (!isSimulationRunning) return;
 
     const fetchAndSet = async () => {
+      setWeatherLoading(true);
       const data = await fetchWeather();
       if (data) setRealWeather(data);
+      setWeatherLoading(false);
     };
 
     fetchAndSet();
@@ -195,6 +200,8 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
         isSimulationRunning,
         toggleSimulation,
         dataPointCount,
+        weatherData: realWeather,
+        weatherLoading,
       }}
     >
       {children}

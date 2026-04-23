@@ -9,6 +9,7 @@ import {
 import { Card, Text, useTheme, Surface, Chip } from "react-native-paper";
 import { AppContext, TrendDirection } from "../contexts/AppContext";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import WeatherCard from "../components/weather";
 
 const { width } = Dimensions.get("window");
 const CARD_WIDTH = (width - 48) / 2;
@@ -526,6 +527,8 @@ export default function DashboardScreen() {
             {thresholds.energy}W
           </Chip>
         </View>
+
+        <WeatherCard />
 
         <View style={{ height: 32 }} />
       </ScrollView>
