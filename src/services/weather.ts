@@ -1,5 +1,6 @@
-const API_KEY = '8cb8ff2ea7eff1132ae21ddf27b9256e';
-const CITY = 'Mauritius'; // or any city you want
+const API_KEY = process.env.EXPO_PUBLIC_WEATHER_API_KEY;
+const CITY = process.env.EXPO_PUBLIC_WEATHER_CITY; // or any city you want
+const WEATHER_URL = process.env.EXPO_PUBLIC_WEATHER_URL;
 
 export interface WeatherData {
   temperature: number;
@@ -11,7 +12,7 @@ export interface WeatherData {
 export const fetchWeather = async (): Promise<WeatherData | null> => {
   try {
     const response = await fetch(
-      `https://api.openweathermap.org/data/2.5/weather?q=${CITY}&units=metric&appid=${API_KEY}`
+      `${WEATHER_URL}?q=${CITY}&units=metric&appid=${API_KEY}`
     );
     const data = await response.json();
     return {
