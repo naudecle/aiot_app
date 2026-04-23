@@ -7,6 +7,7 @@ import React, {
   ReactNode,
 } from "react";
 import { insertData, initDB } from "../services/db";
+import { fetchWeather, WeatherData } from "../services/weather";
 
 export interface SensorData {
   id?: number;
@@ -81,6 +82,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
   const [refreshHistory, setRefreshHistory] = useState(0);
   const [isSimulationRunning, setIsSimulationRunning] = useState(true);
   const [dataPointCount, setDataPointCount] = useState(0);
+  const [realWeather, setRealWeather] = useState<WeatherData | null>(null);
 
   useEffect(() => {
     initDB()
@@ -108,13 +110,30 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
   };
 
   useEffect(() => {
+    if (!isSimulationRunning) return;
+
+    const fetchAndSet = async () => {
+      const data = await fetchWeather();
+      if (data) setRealWeather(data);
+    };
+
+    fetchAndSet();
+    const interval = setInterval(fetchAndSet, 60000); // every 60s
+    return () => clearInterval(interval);
+  }, [isSimulationRunning]);
+
+  useEffect(() => {
     if (!dbReady || !isSimulationRunning) return;
 
     const interval = setInterval(() => {
       const timestamp = new Date().toISOString();
       const newData: SensorData = {
-        temperature: +(18 + Math.random() * 25).toFixed(1),
-        humidity: +(25 + Math.random() * 55).toFixed(1),
+        temperature: realWeather
+          ? +(realWeather.temperature + (Math.random() * 2 - 1)).toFixed(1)
+          : +(18 + Math.random() * 25).toFixed(1),
+        humidity: realWeather
+          ? +(realWeather.humidity + (Math.random() * 3 - 1.5))
+          : +(25 + Math.random() * 55).toFixed(1),
         motion: Math.random() > 0.75 ? 1 : 0,
         energy: +(50 + Math.random() * 500).toFixed(0),
         timestamp,
