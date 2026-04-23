@@ -1,10 +1,16 @@
-import React, { useContext, useEffect, useRef } from 'react';
-import { View, StyleSheet, ScrollView, Animated, Dimensions } from 'react-native';
-import { Card, Text, useTheme, Surface, Chip } from 'react-native-paper';
-import { AppContext, TrendDirection } from '../contexts/AppContext';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import React, { useContext, useEffect, useRef } from "react";
+import {
+  View,
+  StyleSheet,
+  ScrollView,
+  Animated,
+  Dimensions,
+} from "react-native";
+import { Card, Text, useTheme, Surface, Chip } from "react-native-paper";
+import { AppContext, TrendDirection } from "../contexts/AppContext";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
-const { width } = Dimensions.get('window');
+const { width } = Dimensions.get("window");
 const CARD_WIDTH = (width - 48) / 2;
 
 interface SensorCardProps {
@@ -18,21 +24,36 @@ interface SensorCardProps {
   index: number;
 }
 
-function TrendIndicator({ trend, color }: { trend: TrendDirection; color: string }) {
+function TrendIndicator({
+  trend,
+  color,
+}: {
+  trend: TrendDirection;
+  color: string;
+}) {
   const theme = useTheme();
-  if (trend === 'stable') return null;
+  if (trend === "stable") return null;
 
-  const iconName = trend === 'up' ? 'trending-up' : 'trending-down';
-  const trendColor = trend === 'up' ? '#EF4444' : '#34D399';
+  const iconName = trend === "up" ? "trending-up" : "trending-down";
+  const trendColor = trend === "up" ? "#EF4444" : "#34D399";
 
   return (
-    <View style={[styles.trendBadge, { backgroundColor: trendColor + '20' }]}>
+    <View style={[styles.trendBadge, { backgroundColor: trendColor + "20" }]}>
       <MaterialCommunityIcons name={iconName} size={14} color={trendColor} />
     </View>
   );
 }
 
-function SensorCard({ icon, label, value, unit, isCritical, trend, gradientColors, index }: SensorCardProps) {
+function SensorCard({
+  icon,
+  label,
+  value,
+  unit,
+  isCritical,
+  trend,
+  gradientColors,
+  index,
+}: SensorCardProps) {
   const theme = useTheme();
   const pulseAnim = useRef(new Animated.Value(1)).current;
   const slideAnim = useRef(new Animated.Value(30)).current;
@@ -59,8 +80,16 @@ function SensorCard({ icon, label, value, unit, isCritical, trend, gradientColor
   // Pulse on value change
   useEffect(() => {
     Animated.sequence([
-      Animated.timing(valueAnim, { toValue: 1.08, duration: 150, useNativeDriver: true }),
-      Animated.timing(valueAnim, { toValue: 1, duration: 150, useNativeDriver: true }),
+      Animated.timing(valueAnim, {
+        toValue: 1.08,
+        duration: 150,
+        useNativeDriver: true,
+      }),
+      Animated.timing(valueAnim, {
+        toValue: 1,
+        duration: 150,
+        useNativeDriver: true,
+      }),
     ]).start();
   }, [value]);
 
@@ -68,9 +97,17 @@ function SensorCard({ icon, label, value, unit, isCritical, trend, gradientColor
     if (isCritical) {
       const animation = Animated.loop(
         Animated.sequence([
-          Animated.timing(pulseAnim, { toValue: 1.03, duration: 600, useNativeDriver: true }),
-          Animated.timing(pulseAnim, { toValue: 1, duration: 600, useNativeDriver: true }),
-        ])
+          Animated.timing(pulseAnim, {
+            toValue: 1.03,
+            duration: 600,
+            useNativeDriver: true,
+          }),
+          Animated.timing(pulseAnim, {
+            toValue: 1,
+            duration: 600,
+            useNativeDriver: true,
+          }),
+        ]),
       );
       animation.start();
       return () => animation.stop();
@@ -106,7 +143,10 @@ function SensorCard({ icon, label, value, unit, isCritical, trend, gradientColor
           <View
             style={[
               styles.iconContainer,
-              { backgroundColor: (isCritical ? theme.colors.error : gradientColors[0]) + '18' },
+              {
+                backgroundColor:
+                  (isCritical ? theme.colors.error : gradientColors[0]) + "18",
+              },
             ]}
           >
             <MaterialCommunityIcons
@@ -116,26 +156,41 @@ function SensorCard({ icon, label, value, unit, isCritical, trend, gradientColor
             />
           </View>
           <View style={styles.cardHeaderRight}>
-            {trend && <TrendIndicator trend={trend} color={gradientColors[0]} />}
+            {trend && (
+              <TrendIndicator trend={trend} color={gradientColors[0]} />
+            )}
             {isCritical && (
-              <View style={[styles.criticalBadge, { backgroundColor: theme.colors.error + '20' }]}>
-                <MaterialCommunityIcons name="alert" size={14} color={theme.colors.error} />
+              <View
+                style={[
+                  styles.criticalBadge,
+                  { backgroundColor: theme.colors.error + "20" },
+                ]}
+              >
+                <MaterialCommunityIcons
+                  name="alert"
+                  size={14}
+                  color={theme.colors.error}
+                />
               </View>
             )}
           </View>
         </View>
         <Text
           variant="labelMedium"
-          style={[styles.cardLabel, { color: theme.colors.onSurface + 'AA' }]}
+          style={[styles.cardLabel, { color: theme.colors.onSurface + "AA" }]}
         >
           {label}
         </Text>
-        <Animated.View style={[styles.valueRow, { transform: [{ scale: valueAnim }] }]}>
+        <Animated.View
+          style={[styles.valueRow, { transform: [{ scale: valueAnim }] }]}
+        >
           <Text
             variant="headlineMedium"
             style={[
               styles.valueText,
-              { color: isCritical ? theme.colors.error : theme.colors.onSurface },
+              {
+                color: isCritical ? theme.colors.error : theme.colors.onSurface,
+              },
             ]}
           >
             {value}
@@ -143,7 +198,10 @@ function SensorCard({ icon, label, value, unit, isCritical, trend, gradientColor
           {unit ? (
             <Text
               variant="labelSmall"
-              style={[styles.unitText, { color: theme.colors.onSurface + '88' }]}
+              style={[
+                styles.unitText,
+                { color: theme.colors.onSurface + "88" },
+              ]}
             >
               {unit}
             </Text>
@@ -152,15 +210,20 @@ function SensorCard({ icon, label, value, unit, isCritical, trend, gradientColor
         <View
           style={[
             styles.statusBar,
-            { backgroundColor: (isCritical ? theme.colors.error : gradientColors[0]) + '30' },
+            {
+              backgroundColor:
+                (isCritical ? theme.colors.error : gradientColors[0]) + "30",
+            },
           ]}
         >
           <View
             style={[
               styles.statusFill,
               {
-                backgroundColor: isCritical ? theme.colors.error : gradientColors[0],
-                width: '100%',
+                backgroundColor: isCritical
+                  ? theme.colors.error
+                  : gradientColors[0],
+                width: "100%",
               },
             ]}
           />
@@ -171,8 +234,10 @@ function SensorCard({ icon, label, value, unit, isCritical, trend, gradientColor
 }
 
 function timeAgo(timestamp: string): string {
-  const seconds = Math.floor((Date.now() - new Date(timestamp).getTime()) / 1000);
-  if (seconds < 5) return 'à l\'instant';
+  const seconds = Math.floor(
+    (Date.now() - new Date(timestamp).getTime()) / 1000,
+  );
+  if (seconds < 5) return "à l'instant";
   if (seconds < 60) return `il y a ${seconds}s`;
   const mins = Math.floor(seconds / 60);
   return `il y a ${mins}min`;
@@ -201,12 +266,24 @@ export default function DashboardScreen() {
 
   if (!currentData) {
     return (
-      <View style={[styles.centered, { backgroundColor: theme.colors.background }]}>
-        <MaterialCommunityIcons name="access-point-network" size={64} color={theme.colors.primary + '60'} />
-        <Text variant="titleMedium" style={{ marginTop: 16, color: theme.colors.onSurface + 'AA' }}>
+      <View
+        style={[styles.centered, { backgroundColor: theme.colors.background }]}
+      >
+        <MaterialCommunityIcons
+          name="access-point-network"
+          size={64}
+          color={theme.colors.primary + "60"}
+        />
+        <Text
+          variant="titleMedium"
+          style={{ marginTop: 16, color: theme.colors.onSurface + "AA" }}
+        >
           Initialisation des capteurs IoT...
         </Text>
-        <Text variant="bodySmall" style={{ marginTop: 8, color: theme.colors.onSurface + '60' }}>
+        <Text
+          variant="bodySmall"
+          style={{ marginTop: 8, color: theme.colors.onSurface + "60" }}
+        >
           Les données arriveront dans 3 secondes
         </Text>
       </View>
@@ -219,9 +296,11 @@ export default function DashboardScreen() {
   const motionDetected = currentData.motion === 1;
 
   const activeAlerts: string[] = [];
-  if (aiotStatus.coolingActive) activeAlerts.push('🧊 Refroidissement activé');
-  if (aiotStatus.dehumidifierActive) activeAlerts.push('💨 Déshumidificateur activé');
-  if (aiotStatus.energySavingMode) activeAlerts.push('⚡ Mode économie d\'énergie');
+  if (aiotStatus.coolingActive) activeAlerts.push("🧊 Refroidissement activé");
+  if (aiotStatus.dehumidifierActive)
+    activeAlerts.push("💨 Déshumidificateur activé");
+  if (aiotStatus.energySavingMode)
+    activeAlerts.push("⚡ Mode économie d'énergie");
 
   const bannerHeight = bannerAnim.interpolate({
     inputRange: [0, 1],
@@ -229,7 +308,9 @@ export default function DashboardScreen() {
   });
 
   return (
-    <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
+    <View
+      style={[styles.container, { backgroundColor: theme.colors.background }]}
+    >
       {/* AIoT Alert Banner */}
       <Animated.View
         style={[
@@ -246,25 +327,55 @@ export default function DashboardScreen() {
           <Text style={styles.alertTitle}>Intelligence AIoT Active</Text>
         </View>
         {activeAlerts.map((alert, i) => (
-          <Text key={i} style={styles.alertItem}>{alert}</Text>
+          <Text key={i} style={styles.alertItem}>
+            {alert}
+          </Text>
         ))}
       </Animated.View>
 
-      <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
+      <ScrollView
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+      >
         {/* Header */}
         <View style={styles.headerRow}>
           <View>
-            <Text variant="headlineSmall" style={[styles.sectionTitle, { color: theme.colors.onSurface }]}>
+            <Text
+              variant="headlineSmall"
+              style={[styles.sectionTitle, { color: theme.colors.onSurface }]}
+            >
               Capteurs en Direct
             </Text>
-            <Text variant="bodySmall" style={{ color: theme.colors.onSurface + '80' }}>
-              {timeAgo(currentData.timestamp)} · {dataPointCount} mesure{dataPointCount > 1 ? 's' : ''}
+            <Text
+              variant="bodySmall"
+              style={{ color: theme.colors.onSurface + "80" }}
+            >
+              {timeAgo(currentData.timestamp)} · {dataPointCount} mesure
+              {dataPointCount > 1 ? "s" : ""}
             </Text>
           </View>
-          <Surface style={[styles.statusChip, { backgroundColor: theme.colors.surfaceVariant }]} elevation={0}>
-            <View style={[styles.statusDot, { backgroundColor: isSimulationRunning ? '#34D399' : theme.colors.outline }]} />
-            <Text variant="labelSmall" style={{ color: theme.colors.onSurface }}>
-              {isSimulationRunning ? 'EN LIGNE' : 'PAUSE'}
+          <Surface
+            style={[
+              styles.statusChip,
+              { backgroundColor: theme.colors.surfaceVariant },
+            ]}
+            elevation={0}
+          >
+            <View
+              style={[
+                styles.statusDot,
+                {
+                  backgroundColor: isSimulationRunning
+                    ? "#34D399"
+                    : theme.colors.outline,
+                },
+              ]}
+            />
+            <Text
+              variant="labelSmall"
+              style={{ color: theme.colors.onSurface }}
+            >
+              {isSimulationRunning ? "EN LIGNE" : "PAUSE"}
             </Text>
           </Surface>
         </View>
@@ -278,7 +389,7 @@ export default function DashboardScreen() {
             unit="°C"
             isCritical={tempCritical}
             trend={trends.temperature}
-            gradientColors={['#F59E0B', '#EF4444']}
+            gradientColors={["#F59E0B", "#EF4444"]}
             index={0}
           />
           <SensorCard
@@ -288,16 +399,16 @@ export default function DashboardScreen() {
             unit="%"
             isCritical={humidityCritical}
             trend={trends.humidity}
-            gradientColors={['#3B82F6', '#06B6D4']}
+            gradientColors={["#3B82F6", "#06B6D4"]}
             index={1}
           />
           <SensorCard
             icon="motion-sensor"
             label="Mouvement"
-            value={motionDetected ? 'Détecté' : 'Aucun'}
+            value={motionDetected ? "Détecté" : "Aucun"}
             unit=""
             isCritical={motionDetected}
-            gradientColors={['#8B5CF6', '#A78BFA']}
+            gradientColors={["#8B5CF6", "#A78BFA"]}
             index={2}
           />
           <SensorCard
@@ -307,30 +418,49 @@ export default function DashboardScreen() {
             unit="W"
             isCritical={energyCritical}
             trend={trends.energy}
-            gradientColors={['#10B981', '#34D399']}
+            gradientColors={["#10B981", "#34D399"]}
             index={3}
           />
         </View>
 
         {/* AIoT Status Section */}
-        <Text variant="titleMedium" style={[styles.sectionTitle, { color: theme.colors.onSurface, marginTop: 24 }]}>
+        <Text
+          variant="titleMedium"
+          style={[
+            styles.sectionTitle,
+            { color: theme.colors.onSurface, marginTop: 24 },
+          ]}
+        >
           État des Systèmes AIoT
         </Text>
-        <Surface style={[styles.aiotCard, { backgroundColor: theme.colors.surface }]} elevation={1}>
+        <Surface
+          style={[styles.aiotCard, { backgroundColor: theme.colors.surface }]}
+          elevation={1}
+        >
           <AIoTRow
             icon="snowflake"
             label="Système de refroidissement"
             active={aiotStatus.coolingActive}
             activeColor="#3B82F6"
           />
-          <View style={[styles.divider, { backgroundColor: theme.colors.outline + '30' }]} />
+          <View
+            style={[
+              styles.divider,
+              { backgroundColor: theme.colors.outline + "30" },
+            ]}
+          />
           <AIoTRow
             icon="air-humidifier"
             label="Déshumidificateur"
             active={aiotStatus.dehumidifierActive}
             activeColor="#06B6D4"
           />
-          <View style={[styles.divider, { backgroundColor: theme.colors.outline + '30' }]} />
+          <View
+            style={[
+              styles.divider,
+              { backgroundColor: theme.colors.outline + "30" },
+            ]}
+          />
           <AIoTRow
             icon="leaf"
             label="Mode économie d'énergie"
@@ -340,14 +470,27 @@ export default function DashboardScreen() {
         </Surface>
 
         {/* Thresholds */}
-        <Text variant="titleMedium" style={[styles.sectionTitle, { color: theme.colors.onSurface, marginTop: 24 }]}>
+        <Text
+          variant="titleMedium"
+          style={[
+            styles.sectionTitle,
+            { color: theme.colors.onSurface, marginTop: 24 },
+          ]}
+        >
           Seuils Configurés
         </Text>
         <View style={styles.chipRow}>
           <Chip
             icon="thermometer"
             mode="outlined"
-            style={[styles.chip, { borderColor: tempCritical ? theme.colors.error : theme.colors.outline }]}
+            style={[
+              styles.chip,
+              {
+                borderColor: tempCritical
+                  ? theme.colors.error
+                  : theme.colors.outline,
+              },
+            ]}
             textStyle={{ color: theme.colors.onSurface, fontSize: 12 }}
           >
             {thresholds.temperature}°C
@@ -355,7 +498,14 @@ export default function DashboardScreen() {
           <Chip
             icon="water-percent"
             mode="outlined"
-            style={[styles.chip, { borderColor: humidityCritical ? theme.colors.error : theme.colors.outline }]}
+            style={[
+              styles.chip,
+              {
+                borderColor: humidityCritical
+                  ? theme.colors.error
+                  : theme.colors.outline,
+              },
+            ]}
             textStyle={{ color: theme.colors.onSurface, fontSize: 12 }}
           >
             {thresholds.humidity}%
@@ -363,7 +513,14 @@ export default function DashboardScreen() {
           <Chip
             icon="flash"
             mode="outlined"
-            style={[styles.chip, { borderColor: energyCritical ? theme.colors.error : theme.colors.outline }]}
+            style={[
+              styles.chip,
+              {
+                borderColor: energyCritical
+                  ? theme.colors.error
+                  : theme.colors.outline,
+              },
+            ]}
             textStyle={{ color: theme.colors.onSurface, fontSize: 12 }}
           >
             {thresholds.energy}W
@@ -394,7 +551,10 @@ function AIoTRow({
         <View
           style={[
             styles.aiotIcon,
-            { backgroundColor: (active ? activeColor : theme.colors.outline) + '18' },
+            {
+              backgroundColor:
+                (active ? activeColor : theme.colors.outline) + "18",
+            },
           ]}
         >
           <MaterialCommunityIcons
@@ -403,14 +563,37 @@ function AIoTRow({
             color={active ? activeColor : theme.colors.outline}
           />
         </View>
-        <Text variant="bodyMedium" style={{ color: theme.colors.onSurface, flex: 1 }}>
+        <Text
+          variant="bodyMedium"
+          style={{ color: theme.colors.onSurface, flex: 1 }}
+        >
           {label}
         </Text>
       </View>
-      <View style={[styles.statusPill, { backgroundColor: active ? activeColor + '20' : theme.colors.outline + '18' }]}>
-        <View style={[styles.pillDot, { backgroundColor: active ? activeColor : theme.colors.outline }]} />
-        <Text variant="labelSmall" style={{ color: active ? activeColor : theme.colors.outline, marginLeft: 6 }}>
-          {active ? 'ACTIF' : 'INACTIF'}
+      <View
+        style={[
+          styles.statusPill,
+          {
+            backgroundColor: active
+              ? activeColor + "20"
+              : theme.colors.outline + "18",
+          },
+        ]}
+      >
+        <View
+          style={[
+            styles.pillDot,
+            { backgroundColor: active ? activeColor : theme.colors.outline },
+          ]}
+        />
+        <Text
+          variant="labelSmall"
+          style={{
+            color: active ? activeColor : theme.colors.outline,
+            marginLeft: 6,
+          }}
+        >
+          {active ? "ACTIF" : "INACTIF"}
         </Text>
       </View>
     </View>
@@ -423,27 +606,27 @@ const styles = StyleSheet.create({
   },
   centered: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     paddingHorizontal: 32,
   },
   alertBanner: {
-    overflow: 'hidden',
+    overflow: "hidden",
     paddingHorizontal: 16,
     paddingVertical: 10,
   },
   alertContent: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: 8,
   },
   alertTitle: {
-    color: '#FFF',
-    fontWeight: '700',
+    color: "#FFF",
+    fontWeight: "700",
     fontSize: 14,
   },
   alertItem: {
-    color: '#FFFFFFDD',
+    color: "#FFFFFFDD",
     fontSize: 12,
     marginLeft: 30,
     marginTop: 2,
@@ -452,18 +635,18 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   headerRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginBottom: 20,
   },
   sectionTitle: {
-    fontWeight: '700',
+    fontWeight: "700",
     marginBottom: 12,
   },
   statusChip: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 20,
@@ -475,9 +658,9 @@ const styles = StyleSheet.create({
     borderRadius: 4,
   },
   grid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "space-between",
     gap: 12,
   },
   cardWrapper: {
@@ -488,62 +671,62 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   cardHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginBottom: 12,
   },
   cardHeaderRight: {
-    flexDirection: 'row',
+    flexDirection: "row",
     gap: 6,
-    alignItems: 'center',
+    alignItems: "center",
   },
   iconContainer: {
     width: 44,
     height: 44,
     borderRadius: 12,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   criticalBadge: {
     width: 28,
     height: 28,
     borderRadius: 14,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   trendBadge: {
     width: 28,
     height: 28,
     borderRadius: 14,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   cardLabel: {
     marginBottom: 4,
-    fontWeight: '500',
+    fontWeight: "500",
     letterSpacing: 0.3,
   },
   valueRow: {
-    flexDirection: 'row',
-    alignItems: 'baseline',
+    flexDirection: "row",
+    alignItems: "baseline",
     gap: 4,
     marginBottom: 12,
   },
   valueText: {
-    fontWeight: '800',
+    fontWeight: "800",
     letterSpacing: -0.5,
   },
   unitText: {
-    fontWeight: '500',
+    fontWeight: "500",
   },
   statusBar: {
     height: 4,
     borderRadius: 2,
-    overflow: 'hidden',
+    overflow: "hidden",
   },
   statusFill: {
-    height: '100%',
+    height: "100%",
     borderRadius: 2,
   },
   aiotCard: {
@@ -551,15 +734,15 @@ const styles = StyleSheet.create({
     padding: 4,
   },
   aiotRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     paddingHorizontal: 16,
     paddingVertical: 14,
   },
   aiotRowLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     flex: 1,
     gap: 12,
   },
@@ -567,16 +750,16 @@ const styles = StyleSheet.create({
     width: 36,
     height: 36,
     borderRadius: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   divider: {
     height: 1,
     marginHorizontal: 16,
   },
   statusPill: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     paddingHorizontal: 10,
     paddingVertical: 5,
     borderRadius: 12,
@@ -587,9 +770,9 @@ const styles = StyleSheet.create({
     borderRadius: 3,
   },
   chipRow: {
-    flexDirection: 'row',
+    flexDirection: "row",
     gap: 8,
-    flexWrap: 'wrap',
+    flexWrap: "wrap",
   },
   chip: {
     borderRadius: 20,

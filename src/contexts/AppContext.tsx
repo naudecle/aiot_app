@@ -1,5 +1,12 @@
-import React, { createContext, useState, useEffect, useCallback, useRef, ReactNode } from 'react';
-import { insertData, initDB } from '../services/db';
+import React, {
+  createContext,
+  useState,
+  useEffect,
+  useCallback,
+  useRef,
+  ReactNode,
+} from "react";
+import { insertData, initDB } from "../services/db";
 
 export interface SensorData {
   id?: number;
@@ -22,7 +29,7 @@ export interface AIoTStatus {
   energySavingMode: boolean;
 }
 
-export type TrendDirection = 'up' | 'down' | 'stable';
+export type TrendDirection = "up" | "down" | "stable";
 
 export interface Trends {
   temperature: TrendDirection;
@@ -66,9 +73,9 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
     energySavingMode: false,
   });
   const [trends, setTrends] = useState<Trends>({
-    temperature: 'stable',
-    humidity: 'stable',
-    energy: 'stable',
+    temperature: "stable",
+    humidity: "stable",
+    energy: "stable",
   });
   const [dbReady, setDbReady] = useState(false);
   const [refreshHistory, setRefreshHistory] = useState(0);
@@ -76,20 +83,28 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
   const [dataPointCount, setDataPointCount] = useState(0);
 
   useEffect(() => {
-    initDB().then(() => setDbReady(true)).catch(console.error);
+    initDB()
+      .then(() => setDbReady(true))
+      .catch(console.error);
   }, []);
 
-  const toggleTheme = useCallback(() => setIsDarkMode(prev => !prev), []);
-  const toggleSimulation = useCallback(() => setIsSimulationRunning(prev => !prev), []);
+  const toggleTheme = useCallback(() => setIsDarkMode((prev) => !prev), []);
+  const toggleSimulation = useCallback(
+    () => setIsSimulationRunning((prev) => !prev),
+    [],
+  );
 
-  const updateThreshold = useCallback((key: keyof Thresholds, value: number) => {
-    setThresholds(prev => ({ ...prev, [key]: value }));
-  }, []);
+  const updateThreshold = useCallback(
+    (key: keyof Thresholds, value: number) => {
+      setThresholds((prev) => ({ ...prev, [key]: value }));
+    },
+    [],
+  );
 
   const computeTrend = (current: number, previous: number): TrendDirection => {
     const diff = current - previous;
-    if (Math.abs(diff) < 0.5) return 'stable';
-    return diff > 0 ? 'up' : 'down';
+    if (Math.abs(diff) < 0.5) return "stable";
+    return diff > 0 ? "up" : "down";
   };
 
   useEffect(() => {
@@ -105,13 +120,13 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
         timestamp,
       };
 
-      setCurrentData(prev => {
+      setCurrentData((prev) => {
         setPreviousData(prev);
         return newData;
       });
 
       // Compute trends
-      setCurrentData(prev => {
+      setCurrentData((prev) => {
         if (prev) {
           setTrends({
             temperature: computeTrend(newData.temperature, prev.temperature),
@@ -122,10 +137,15 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
         return newData;
       });
 
-      setDataPointCount(c => c + 1);
+      setDataPointCount((c) => c + 1);
 
-      insertData(newData.temperature, newData.humidity, newData.motion, newData.energy)
-        .then(() => setRefreshHistory(prev => prev + 1))
+      insertData(
+        newData.temperature,
+        newData.humidity,
+        newData.motion,
+        newData.energy,
+      )
+        .then(() => setRefreshHistory((prev) => prev + 1))
         .catch(console.error);
 
       // AIoT logic
