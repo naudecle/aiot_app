@@ -8,6 +8,7 @@ import React, {
 } from "react";
 import { insertData, initDB } from "../services/db";
 import { fetchWeather, WeatherData } from "../services/weather";
+import * as Location from "expo-location";
 
 export interface SensorData {
   id?: number;
@@ -112,20 +113,50 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
     return diff > 0 ? "up" : "down";
   };
 
+  // Get device location then fetch weather every 60 seconds
   useEffect(() => {
-    if (!isSimulationRunning) return;
+    let interval: ReturnType<typeof setInterval>;
 
-    const fetchAndSet = async () => {
+    const startWeather = async () => {
       setWeatherLoading(true);
-      const data = await fetchWeather();
-      if (data) setRealWeather(data);
-      setWeatherLoading(false);
+
+      // Request location permission
+      const { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        console.warn("Location permission denied, using default coordinates");
+        // Fallback to Beau Bassin, Mauritius
+        const data = await fetchWeather();
+        if (data) setRealWeather(data);
+        setWeatherLoading(false);
+        return;
+      }
+
+      const fetchWithLocation = async () => {
+        try {
+          const location = await Location.getCurrentPositionAsync({
+            accuracy: Location.Accuracy.Balanced,
+          });
+          const { latitude, longitude } = location.coords;
+          const data = await fetchWeather(latitude, longitude);
+          if (data) setRealWeather(data);
+        } catch (error) {
+          console.error("Location/weather error:", error);
+          // Fallback if GPS fails
+          const data = await fetchWeather();
+          if (data) setRealWeather(data);
+        }
+        setWeatherLoading(false);
+      };
+
+      await fetchWithLocation();
+      interval = setInterval(fetchWithLocation, 60000);
     };
 
-    fetchAndSet();
-    const interval = setInterval(fetchAndSet, 60000); // every 60s
-    return () => clearInterval(interval);
-  }, [isSimulationRunning]);
+    startWeather();
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, []);
 
   useEffect(() => {
     if (!dbReady || !isSimulationRunning) return;
