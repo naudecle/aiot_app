@@ -4,23 +4,23 @@ Une application mobile hybride intelligente développée avec **React Native** e
 
 ## 🌟 Fonctionnalités
 
-- **Simulation IoT en temps réel** : Génération automatique de données (Température, Humidité, Mouvement, Énergie) toutes les 3 secondes.
-- **Dashboard Dynamique** : Affichage en temps réel avec indicateurs de tendance (↑/↓), micro-animations et alertes visuelles.
-- **Logique AIoT Intelligente** : Réactions automatiques du système basées sur des seuils :
-  - 🌡️ Température élevée -> _Système de refroidissement activé_
-  - 💧 Humidité élevée -> _Déshumidificateur activé_
-  - ⚡ Forte consommation -> _Mode économie d'énergie_
-- **Historique et Statistiques** : Suivi des 200 dernières mesures avec moyennes, minimums, maximums, et filtres de criticité.
-- **Base de Données Locale** : Sauvegarde des données avec `expo-sqlite` (sur mobile) et un fallback en mémoire (sur le web).
-- **Personnalisation** : Interface premium avec Mode Sombre, configuration des seuils critiques, et contrôle de la simulation.
+- **Simulation IoT en temps réel (toutes les 3 s)** : Génération automatique de mesures simulées — température, humidité, mouvement et consommation d'énergie — avec plages et probabilités réalistes (ex. température ~18–43°C, humidité ~25–80%, mouvement détecté ≈25% du temps, énergie ≈50–550 W).
+- **Dashboard en direct** : Affichage des valeurs actuelles, indicateurs de tendance (`up`/`down`/`stable` calculés sur la variation entre points) et bannière d'alerte AIoT.
+- **Logique AIoT basée sur règles** : Détection d'anomalies par seuils configurables (température, humidité, énergie). Actions/états dérivés : refroidissement, déshumidification, mode économie d'énergie ; `alertActive` passe à `true` si l'un des seuils est franchi.
+- **Historique et Statistiques** : Persistance des mesures et affichage des 200 derniers enregistrements ; calculs agrégés (moyenne, min, max, nombre d'alertes) et filtres (tous / critiques / normaux).
+- **Stockage flexible** : Sauvegarde native sur SQLite via `expo-sqlite` (iOS/Android) avec fallback en mémoire sur le Web (tampon limité à 500 enregistrements).
+- **Paramétrage et contrôle** : Interface pour ajuster les seuils, activer/désactiver la simulation et basculer le thème (mode sombre).
 
 ## 🛠️ Technologies Utilisées
 
-- **Framework** : React Native / Expo
-- **Navigation** : React Navigation v7 (Bottom Tabs)
-- **UI/UX** : React Native Paper (Material Design 3)
-- **Base de données** : SQLite
-- **Langage** : TypeScript
+- **Framework & Runtime** : React Native + Expo (hybride mobile / web)
+- **Langage** : TypeScript — typage pour composants et logique applicative
+- **UI** : React Native Paper (Material Design 3) — composants et thèmes
+- **Navigation** : React Navigation (Bottom Tabs)
+- **Persistance** : `expo-sqlite` pour stockage local natif (table `SensorData`), fallback en mémoire pour l'exécution web
+- **Outils & dépendances** : Metro/Expo CLI, Expo Go pour tests sur appareil, utilitaires React Hooks (`useEffect`, `useState`, `useContext`) pour la simulation et la synchronisation
+
+Pour les détails d'implémentation : la simulation et la logique d'alerte sont gérées depuis le contexte global ([src/contexts/AppContext.tsx](src/contexts/AppContext.tsx#L1-L170)), et la persistance par [src/services/db.ts](src/services/db.ts#L1-L103).
 
 ## 🚀 Démarrage Rapide
 
