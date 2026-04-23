@@ -122,11 +122,6 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
 
       setCurrentData((prev) => {
         setPreviousData(prev);
-        return newData;
-      });
-
-      // Compute trends
-      setCurrentData((prev) => {
         if (prev) {
           setTrends({
             temperature: computeTrend(newData.temperature, prev.temperature),
