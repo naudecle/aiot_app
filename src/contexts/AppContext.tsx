@@ -39,6 +39,12 @@ export interface Trends {
   energy: TrendDirection;
 }
 
+export interface UserLocation {
+  latitude: number;
+  longitude: number;
+  cityName: string | null;
+}
+
 interface AppContextData {
   isDarkMode: boolean;
   toggleTheme: () => void;
@@ -55,8 +61,10 @@ interface AppContextData {
   dataPointCount: number;
   weatherData: WeatherData | null;
   weatherLoading: boolean;
+  userLocation: UserLocation | null;
+  updateLocation: (lat: number, lon: number, city?: string) => void;
+  refreshLocationFromGPS: () => Promise<void>;
 }
-
 export const AppContext = createContext<AppContextData>({} as AppContextData);
 
 const DEFAULT_THRESHOLDS: Thresholds = {
@@ -87,6 +95,8 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
   const [dataPointCount, setDataPointCount] = useState(0);
   const [realWeather, setRealWeather] = useState<WeatherData | null>(null);
   const [weatherLoading, setWeatherLoading] = useState(true);
+  const [userLocation, setUserLocation] = useState<UserLocation | null>(null);
+  const [locationReady, setLocationReady] = useState(false);
 
   useEffect(() => {
     initDB()
@@ -113,50 +123,88 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
     return diff > 0 ? "up" : "down";
   };
 
-  // Get device location then fetch weather every 60 seconds
+  // Get device location ONCE on first launch
   useEffect(() => {
-    let interval: ReturnType<typeof setInterval>;
-
-    const startWeather = async () => {
-      setWeatherLoading(true);
-
-      // Request location permission
-      const { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== "granted") {
-        console.warn("Location permission denied, using default coordinates");
-        // Fallback to Beau Bassin, Mauritius
-        const data = await fetchWeather();
-        if (data) setRealWeather(data);
-        setWeatherLoading(false);
-        return;
-      }
-
-      const fetchWithLocation = async () => {
-        try {
+    const initLocation = async () => {
+      try {
+        const { status } = await Location.requestForegroundPermissionsAsync();
+        if (status === "granted") {
           const location = await Location.getCurrentPositionAsync({
             accuracy: Location.Accuracy.Balanced,
           });
-          const { latitude, longitude } = location.coords;
-          const data = await fetchWeather(latitude, longitude);
-          if (data) setRealWeather(data);
-        } catch (error) {
-          console.error("Location/weather error:", error);
-          // Fallback if GPS fails
-          const data = await fetchWeather();
-          if (data) setRealWeather(data);
+          setUserLocation({
+            latitude: location.coords.latitude,
+            longitude: location.coords.longitude,
+            cityName: null, // will be filled by weather response
+          });
         }
-        setWeatherLoading(false);
-      };
-
-      await fetchWithLocation();
-      interval = setInterval(fetchWithLocation, 60000);
+      } catch (error) {
+        console.warn("GPS failed, using default location:", error);
+      }
+      setLocationReady(true);
     };
 
-    startWeather();
-    return () => {
-      if (interval) clearInterval(interval);
-    };
+    initLocation();
   }, []);
+
+  // Manual location update from Settings
+  const updateLocation = useCallback(
+    (lat: number, lon: number, city?: string) => {
+      setUserLocation({
+        latitude: lat,
+        longitude: lon,
+        cityName: city || null,
+      });
+    },
+    [],
+  );
+
+  // Re-detect location from GPS
+  const refreshLocationFromGPS = useCallback(async () => {
+    try {
+      const { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        throw new Error("Permission denied");
+      }
+      const location = await Location.getCurrentPositionAsync({
+        accuracy: Location.Accuracy.Balanced,
+      });
+      setUserLocation({
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude,
+        cityName: null,
+      });
+    } catch (error) {
+      throw error;
+    }
+  }, []);
+
+  // Fetch weather every 60 seconds using current userLocation
+  useEffect(() => {
+    if (!locationReady) return;
+
+    const fetchAndSet = async () => {
+      setWeatherLoading(true);
+      const data = await fetchWeather(
+        userLocation?.latitude,
+        userLocation?.longitude,
+      );
+      if (data) {
+        setRealWeather(data);
+        // Update cityName from API response if not manually set
+        if (!userLocation?.cityName || userLocation?.cityName !== data.city) {
+          setUserLocation((prev) =>
+            prev ? { ...prev, cityName: data.city } : prev,
+          );
+        }
+      }
+      setWeatherLoading(false);
+    };
+
+    fetchAndSet();
+    const interval = setInterval(fetchAndSet, 60000);
+    return () => clearInterval(interval);
+  }, [locationReady, userLocation?.latitude, userLocation?.longitude]);
 
   useEffect(() => {
     if (!dbReady || !isSimulationRunning) return;
@@ -233,6 +281,9 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
         dataPointCount,
         weatherData: realWeather,
         weatherLoading,
+        userLocation,
+        updateLocation,
+        refreshLocationFromGPS,
       }}
     >
       {children}
