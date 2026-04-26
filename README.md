@@ -85,10 +85,13 @@ npx expo start --tunnel
 
 ## 📱 Captures d'écran
 
-<img width="929" height="965" alt="dashboard_alert" src="https://github.com/user-attachments/assets/0ee337e0-b636-4b1b-992a-56734a226cf2" />
-<img width="929" height="965" alt="dashboard_normal" src="https://github.com/user-attachments/assets/0d6d8ad3-2b14-443b-8e5e-8cf298dbad68" />
-<img width="929" height="965" alt="historique" src="https://github.com/user-attachments/assets/4bae590f-89e6-4a8f-90d4-faf59b1b3608" />
-<img width="929" height="965" alt="parametres" src="https://github.com/user-attachments/assets/d8e9de4d-34a1-459b-9b69-b3fc037cc9dd" />
+<img width="1913" height="859" alt="image" src="https://github.com/user-attachments/assets/195c0f0f-6e89-44ee-b687-f8aae7a9dbfa" />
+<img width="1903" height="942" alt="image" src="https://github.com/user-attachments/assets/33926435-6f18-4853-899d-6587b694bb24" />
+<img width="1910" height="748" alt="image" src="https://github.com/user-attachments/assets/1bb27c82-d124-4382-8b49-73dd98d4e436" />
+<img width="1919" height="429" alt="image" src="https://github.com/user-attachments/assets/0d28467a-5bb5-43c2-9202-12320e891b3c" />
+
+
+
 
 ## 💡 Notes sur le développement
 
