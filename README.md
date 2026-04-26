@@ -82,7 +82,14 @@ npx expo start --tunnel
 
 - **Sur Mobile** : Scannez le QR code généré dans le terminal avec l'application **Expo Go** (Android) ou l'appareil photo qui va ouvrir l'application **Expo Go** (iOS).
 - **Sur Web** : Appuyez sur `w` dans le terminal pour ouvrir l'application dans votre navigateur (utilise le fallback mémoire pour la base de données).
+### Lecture du fichier SQlite en mode DEV
 
+ **Sur Windows** : s'il y a une erreur **Unable to open default EUDC font: EUDC.TTE** lors de l'ouverture du fichier SQlite de l'application, suivez les étapes suivantes:
+ 1. Dans la barre de recherche, entrez **"Private Character Editor"**
+ 2. Cliquez sur Edit > Select Code, puis OK
+ 3. Dessinez un petit personnage en utilisant l'outil crayon de barre d'outils (Tools). Pas de rendre ça réel, même un point est suffisant.
+ 4. Enregistrez le caractère en cliquant sur Edit > Save Character.
+ 5. Puis réessayer d'ouvrir le fichier .db
 ## 📱 Captures d'écran
 
 <img width="1913" height="859" alt="image" src="https://github.com/user-attachments/assets/195c0f0f-6e89-44ee-b687-f8aae7a9dbfa" />
