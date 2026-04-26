@@ -80,7 +80,7 @@ npx expo start --tunnel
 
 ### Tester l'application
 
-- **Sur Mobile** : Scannez le QR code généré dans le terminal avec l'application **Expo Go** (Android) ou l'appareil photo (iOS).
+- **Sur Mobile** : Scannez le QR code généré dans le terminal avec l'application **Expo Go** (Android) ou l'appareil photo qui va ouvrir l'application **Expo Go** (iOS).
 - **Sur Web** : Appuyez sur `w` dans le terminal pour ouvrir l'application dans votre navigateur (utilise le fallback mémoire pour la base de données).
 
 ## 📱 Captures d'écran
