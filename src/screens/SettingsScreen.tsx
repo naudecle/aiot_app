@@ -321,7 +321,7 @@ export default function SettingsScreen() {
               label="Latitude"
               value={latInput}
               onChangeText={setLatInput}
-              keyboardType="numeric"
+              keyboardType="numbers-and-punctuation"
               mode="outlined"
               dense
               style={styles.locationInput}
@@ -332,7 +332,7 @@ export default function SettingsScreen() {
               label="Longitude"
               value={lonInput}
               onChangeText={setLonInput}
-              keyboardType="numeric"
+              keyboardType="numbers-and-punctuation"
               mode="outlined"
               dense
               style={styles.locationInput}

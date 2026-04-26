@@ -186,8 +186,8 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
     const fetchAndSet = async () => {
       setWeatherLoading(true);
       const data = await fetchWeather(
-        userLocation?.latitude,
-        userLocation?.longitude,
+        userLocation?.latitude ?? undefined,
+        userLocation?.longitude ?? undefined,
       );
       if (data) {
         setRealWeather(data);
